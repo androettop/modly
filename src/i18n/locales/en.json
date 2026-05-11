@@ -12,10 +12,30 @@
     "maximize": "Maximize",
     "close": "Close"
   },
+  "performance": {
+    "subtitle": "Configure GPU usage and memory limits.",
+    "device": "Device",
+    "deviceDescription": "Select which compute device to use for AI inference.",
+    "gpuDevice": "GPU device",
+    "gpuDeviceDescription": "Device used for model inference.",
+    "autoDetect": "Auto-detect",
+    "cpu": "CPU (slow)",
+    "fp16": "FP16 precision",
+    "fp16Description": "Half-precision for faster inference.",
+    "memory": "Memory",
+    "memoryDescription": "Control memory allocation per generation job.",
+    "vramLimit": "VRAM limit",
+    "vramDescription": "Max GPU memory per generation.",
+    "noLimit": "No limit",
+    "parallelWorkers": "Parallel workers",
+    "workersDescription": "Concurrent generation jobs.",
+    "default": "1 (default)"
+  },
   "settings": {
     "title": "Settings",
     "general": "General",
     "storage": "Storage",
+    "performance": "Performance",
     "integrations": "Integrations",
     "logs": "Logs",
     "about": "About"
@@ -96,8 +116,11 @@
     "loading": "Loading…",
     "noEntries": "No entries in {{file}}",
     "errors": "Errors",
+    "errorsDesc": "Error log file",
     "runtime": "Runtime",
-    "app": "App"
+    "runtimeDesc": "Runtime log file",
+    "app": "App",
+    "appDesc": "Application log file"
   },
   "about": {
     "title": "About",
@@ -237,11 +260,28 @@
   "workflows": {
     "title": "Workflows",
     "newWorkflow": "New Workflow",
+    "newWorkflowTitle": "New workflow",
+    "importWorkflowTitle": "Import workflow",
+    "closeWorkflowTitle": "Close workflow",
+    "howWorkflowsWork": "How workflows work",
+    "chooseHowToStart": "Choose how to start",
+    "blank": "Blank",
+    "blankDesc": "Empty canvas",
+    "starter": "Starter",
+    "extensions": "Extensions",
+    "dragOntoCanvas": "Drag onto canvas",
     "save": "Save",
     "delete": "Delete",
+    "stop": "Stop",
+    "run": "Run",
+    "new": "New",
+    "import": "Import",
     "noWorkflows": "No workflows",
+    "noWorkflowsYet": "No workflows yet",
     "createFirst": "Create your first workflow",
-    "untitled": "Untitled"
+    "createOne": "Create one",
+    "untitled": "Untitled",
+    "workflowNamePlaceholder": "Workflow name…"
   },
   "viewer": {
     "solid": "Solid",

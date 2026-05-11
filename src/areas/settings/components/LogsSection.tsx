@@ -92,7 +92,7 @@ export function LogsSection(): JSX.Element {
           <button
             key={f.id}
             onClick={() => setActiveFile(f.id)}
-            title={t(f.descKey, f.id)}
+            title={t(f.descKey)}
             className={`px-4 py-2 text-xs font-medium transition-colors border-b-2 -mb-px ${
               activeFile === f.id
                 ? 'border-accent text-accent-light'

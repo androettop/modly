@@ -12,10 +12,30 @@
     "maximize": "Maximizar",
     "close": "Cerrar"
   },
+  "performance": {
+    "subtitle": "Configura el uso de GPU y los límites de memoria.",
+    "device": "Dispositivo",
+    "deviceDescription": "Selecciona el dispositivo de cómputo para la inferencia de IA.",
+    "gpuDevice": "Dispositivo GPU",
+    "gpuDeviceDescription": "Dispositivo usado para la inferencia del modelo.",
+    "autoDetect": "Auto-detectar",
+    "cpu": "CPU (lento)",
+    "fp16": "Precisión FP16",
+    "fp16Description": "Semiprecisión para inferencia más rápida.",
+    "memory": "Memoria",
+    "memoryDescription": "Controla la asignación de memoria por trabajo de generación.",
+    "vramLimit": "Límite de VRAM",
+    "vramDescription": "Memoria GPU máxima por generación.",
+    "noLimit": "Sin límite",
+    "parallelWorkers": "Trabajos paralelos",
+    "workersDescription": "Trabajos de generación simultáneos.",
+    "default": "1 (por defecto)"
+  },
   "settings": {
     "title": "Ajustes",
     "general": "General",
     "storage": "Almacenamiento",
+    "performance": "Rendimiento",
     "integrations": "Integraciones",
     "logs": "Registros",
     "about": "Acerca de"
@@ -96,8 +116,11 @@
     "loading": "Cargando…",
     "noEntries": "Sin entradas en {{file}}",
     "errors": "Errores",
+    "errorsDesc": "Archivo de registro de errores",
     "runtime": "Ejecución",
-    "app": "App"
+    "runtimeDesc": "Archivo de registro de ejecución",
+    "app": "App",
+    "appDesc": "Archivo de registro de la aplicación"
   },
   "about": {
     "title": "Acerca de",
@@ -237,11 +260,28 @@
   "workflows": {
     "title": "Flujos de trabajo",
     "newWorkflow": "Nuevo flujo de trabajo",
+    "newWorkflowTitle": "Nuevo flujo",
+    "importWorkflowTitle": "Importar flujo",
+    "closeWorkflowTitle": "Cerrar flujo",
+    "howWorkflowsWork": "Cómo funcionan los flujos",
+    "chooseHowToStart": "Cómo empezar",
+    "blank": "En blanco",
+    "blankDesc": "Lienzo vacío",
+    "starter": "Plantilla inicial",
+    "extensions": "Extensiones",
+    "dragOntoCanvas": "Arrastra al lienzo",
     "save": "Guardar",
     "delete": "Eliminar",
+    "stop": "Detener",
+    "run": "Ejecutar",
+    "new": "Nuevo",
+    "import": "Importar",
     "noWorkflows": "Sin flujos de trabajo",
+    "noWorkflowsYet": "Sin flujos aún",
     "createFirst": "Crea tu primer flujo de trabajo",
-    "untitled": "Sin título"
+    "createOne": "Crear uno",
+    "untitled": "Sin título",
+    "workflowNamePlaceholder": "Nombre del flujo…"
   },
   "viewer": {
     "solid": "Sólido",
