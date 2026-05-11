@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAppStore } from '@shared/stores/appStore'
 import type { GenerationJob } from '@shared/stores/appStore'
 import { useApi } from '@shared/hooks/useApi'
@@ -70,18 +71,20 @@ function DecimatePopover({
       ? Math.round((1 - Math.min(validTarget, currentTriangles) / currentTriangles) * 100)
       : null
 
+  const { t } = useTranslation()
+
   return (
     <div className="absolute top-full left-0 mt-1 z-50 bg-zinc-900 border border-zinc-700/60 rounded-xl p-3 flex flex-col gap-3 min-w-[200px] shadow-xl">
-      <p className="text-[10px] text-zinc-500 uppercase tracking-wider">Decimate mesh</p>
+      <p className="text-[10px] text-zinc-500 uppercase tracking-wider">{t('generate.decimateMesh')}</p>
 
       {currentTriangles && (
         <p className="text-[10px] text-zinc-500">
-          Current: <span className="text-zinc-300">{currentTriangles.toLocaleString()} tri</span>
+          {t('generate.current') + ': '}<span className="text-zinc-300">{currentTriangles.toLocaleString()} tri</span>
         </p>
       )}
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-[10px] text-zinc-500">Target faces</label>
+        <label className="text-[10px] text-zinc-500">{t('generate.targetFaces')}</label>
         <input
           type="number"
           value={inputValue}
@@ -92,7 +95,7 @@ function DecimatePopover({
         />
         {reduction !== null && (
           <p className="text-[10px] text-zinc-500">
-            Reduction: <span className="text-violet-400">{reduction}%</span>
+            {t('generate.reduction') + ': '}<span className="text-violet-400">{reduction}%</span>
           </p>
         )}
       </div>
@@ -102,7 +105,7 @@ function DecimatePopover({
           onClick={onClose}
           className="flex-1 px-3 py-1.5 text-xs text-zinc-400 hover:text-zinc-200 bg-zinc-800 hover:bg-zinc-700 rounded-lg transition-colors"
         >
-          Cancel
+          {t('generate.cancel')}
         </button>
         <button
           onClick={() => validTarget && onDecimate(validTarget)}
@@ -114,9 +117,9 @@ function DecimatePopover({
               <svg className="animate-spin" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M21 12a9 9 0 1 1-6.219-8.56" />
               </svg>
-              Processing…
+              {t('generate.processing')}
             </>
-          ) : 'Apply'}
+          ) : t('generate.apply')}
         </button>
       </div>
     </div>
@@ -181,24 +184,26 @@ function LightPopover({
     )
   }
 
+  const { t } = useTranslation()
+
   return (
     <div className="absolute top-full right-0 mt-1 z-50 bg-zinc-900 border border-zinc-700/60 rounded-xl p-3 flex flex-col gap-3 min-w-[220px] shadow-xl">
       <div className="flex items-center justify-between">
-        <p className="text-[10px] text-zinc-500 uppercase tracking-wider">Lighting</p>
+        <p className="text-[10px] text-zinc-500 uppercase tracking-wider">{t('generate.lighting')}</p>
         <button
           onClick={() => onChange(DEFAULT_LIGHT_SETTINGS)}
           className="text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors"
         >
-          Reset
+          {t('generate.reset')}
         </button>
       </div>
-      {lightRow('Sun', 'mainColor', 'mainIntensity', 4)}
-      {lightRow('Fill', 'fillColor', 'fillIntensity', 2)}
+      {lightRow(t('generate.sun'), 'mainColor', 'mainIntensity', 4)}
+      {lightRow(t('generate.fill'), 'fillColor', 'fillIntensity', 2)}
       <button
         onClick={onClose}
         className="mt-1 px-3 py-1.5 text-xs text-zinc-400 hover:text-zinc-200 bg-zinc-800 hover:bg-zinc-700 rounded-lg transition-colors"
       >
-        Close
+        {t('generate.close')}
       </button>
     </div>
   )
@@ -222,12 +227,14 @@ function SmoothPopover({
   const parsed = parseInt(inputValue, 10)
   const valid = !isNaN(parsed) && parsed >= 1 && parsed <= 20
 
+  const { t } = useTranslation()
+
   return (
     <div className="absolute top-full left-0 mt-1 z-50 bg-zinc-900 border border-zinc-700/60 rounded-xl p-3 flex flex-col gap-3 min-w-[190px] shadow-xl">
-      <p className="text-[10px] text-zinc-500 uppercase tracking-wider">Smooth mesh</p>
+      <p className="text-[10px] text-zinc-500 uppercase tracking-wider">{t('generate.smoothMesh')}</p>
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-[10px] text-zinc-500">Iterations <span className="text-zinc-600">(1–20)</span></label>
+        <label className="text-[10px] text-zinc-500">{t('generate.iterations') + ' '}<span className="text-zinc-600">(1–20)</span></label>
         <input
           type="number"
           value={inputValue}
@@ -237,7 +244,7 @@ function SmoothPopover({
           step={1}
           className="bg-zinc-800 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs text-zinc-200 w-full focus:outline-none focus:border-violet-500 transition-colors"
         />
-        <p className="text-[10px] text-zinc-600">More iterations = smoother, but loses detail</p>
+        <p className="text-[10px] text-zinc-600">{t('generate.moreIterationsNote')}</p>
       </div>
 
       <div className="flex gap-2">
@@ -245,7 +252,7 @@ function SmoothPopover({
           onClick={onClose}
           className="flex-1 px-3 py-1.5 text-xs text-zinc-400 hover:text-zinc-200 bg-zinc-800 hover:bg-zinc-700 rounded-lg transition-colors"
         >
-          Cancel
+          {t('generate.cancel')}
         </button>
         <button
           onClick={() => valid && onSmooth(parsed)}
@@ -257,9 +264,9 @@ function SmoothPopover({
               <svg className="animate-spin" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M21 12a9 9 0 1 1-6.219-8.56" />
               </svg>
-              Processing…
+              {t('generate.processing')}
             </>
-          ) : 'Apply'}
+          ) : t('generate.apply')}
         </button>
       </div>
     </div>
@@ -271,6 +278,7 @@ function SmoothPopover({
 // ---------------------------------------------------------------------------
 
 export default function GeneratePage(): JSX.Element {
+  const { t } = useTranslation()
   const [unloadStatus, setUnloadStatus] = useState<'idle' | 'done'>('idle')
   const [panelWidth, setPanelWidth] = useState(DEFAULT_WIDTH)
   const [openPanel, setOpenPanel] = useState<'export' | 'decimate' | 'smooth' | 'import' | 'light' | null>(null)
@@ -415,7 +423,7 @@ export default function GeneratePage(): JSX.Element {
           <button
             onClick={undoMesh}
             disabled={!canUndo}
-            title="Undo (Ctrl+Z)"
+            title={t('generate.undo')}
             className="flex items-center justify-center w-7 h-7 rounded-lg text-[11px] font-medium bg-zinc-800 border border-zinc-700/50 text-zinc-400 hover:text-zinc-200 hover:border-zinc-600 transition-colors disabled:opacity-30 disabled:pointer-events-none"
           >
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
@@ -426,7 +434,7 @@ export default function GeneratePage(): JSX.Element {
           <button
             onClick={redoMesh}
             disabled={!canRedo}
-            title="Redo (Ctrl+Y)"
+            title={t('generate.redo')}
             className="flex items-center justify-center w-7 h-7 rounded-lg text-[11px] font-medium bg-zinc-800 border border-zinc-700/50 text-zinc-400 hover:text-zinc-200 hover:border-zinc-600 transition-colors disabled:opacity-30 disabled:pointer-events-none"
           >
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
@@ -459,7 +467,7 @@ export default function GeneratePage(): JSX.Element {
                   <line x1="12" y1="5" x2="12" y2="15" />
                 </svg>
               )}
-              {importing ? 'Importing…' : 'Import'}
+              {importing ? t('generate.importing') : t('generate.import')}
               {!importing && (
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="6 9 12 15 18 9" />
@@ -476,8 +484,8 @@ export default function GeneratePage(): JSX.Element {
                     <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                   </svg>
                   <div>
-                    <p className="text-xs text-zinc-200">Mesh</p>
-                    <p className="text-[10px] text-zinc-500">.glb .obj .stl .ply</p>
+                   <p className="text-xs text-zinc-200">{t('generate.importMesh')}</p>
+                   <p className="text-[10px] text-zinc-500">{t('generate.importMeshExtensions')}</p>
                   </div>
                 </button>
               </div>
@@ -503,7 +511,7 @@ export default function GeneratePage(): JSX.Element {
                     <polyline points="7 10 12 15 17 10" />
                     <line x1="12" y1="15" x2="12" y2="3" />
                   </svg>
-                  Export
+                  {t('generate.export')}
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <polyline points="6 9 12 15 18 9" />
                   </svg>
@@ -537,7 +545,7 @@ export default function GeneratePage(): JSX.Element {
                       <circle cx="12" cy="12" r="3" />
                     </svg>
                   )}
-                  {smoothing ? 'Processing…' : 'Smooth'}
+                  {smoothing ? t('generate.processing') : t('generate.smooth')}
                 </button>
                 {openPanel === 'smooth' && (
                   <SmoothPopover
@@ -571,7 +579,7 @@ export default function GeneratePage(): JSX.Element {
                       <line x1="8" y1="17" x2="16" y2="17" />
                     </svg>
                   )}
-                  {decimating ? 'Processing…' : 'Decimate'}
+                  {decimating ? t('generate.processing') : t('generate.decimate')}
                 </button>
                 {openPanel === 'decimate' && (
                   <DecimatePopover
@@ -590,7 +598,7 @@ export default function GeneratePage(): JSX.Element {
           <div className="relative ml-auto">
             <button
               onClick={() => setOpenPanel((p) => (p === 'light' ? null : 'light'))}
-              title="Lighting"
+              title={t('generate.lighting')}
               className={`flex items-center justify-center w-7 h-7 rounded-lg border transition-colors
                 ${openPanel === 'light'
                   ? 'bg-zinc-700 border-zinc-600 text-zinc-200'
@@ -634,7 +642,7 @@ export default function GeneratePage(): JSX.Element {
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
               <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
             </svg>
-            {unloadStatus === 'done' ? 'Freed' : 'Free memory'}
+            {unloadStatus === 'done' ? t('generate.unloaded') : t('generate.unloadModels')}
           </button>
         </div>
       </div>
