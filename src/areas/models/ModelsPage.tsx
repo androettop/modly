@@ -100,7 +100,9 @@ export default function ModelsPage(): JSX.Element {
   async function handleGHInstall() {
     const url = ghUrl.trim()
     if (!url) { setGhErr(t('models.githubUrlRequired')); return }
-    if (!url.includes('github.com')) { setGhErr(t('models.mustBeGitHub')); return }
+    let hostname: string
+    try { hostname = new URL(url).hostname } catch { hostname = '' }
+    if (hostname !== 'github.com' && !hostname.endsWith('.github.com')) { setGhErr(t('models.mustBeGitHub')); return }
     setGhErr(null)
     clearInstall()
     const result = await installFromGH(url)
