@@ -43,7 +43,6 @@
   "general": {
     "title": "General",
     "subtitle": "Idioma de la aplicación y preferencias generales.",
-    "language": "Idioma",
     "languageLabel": "Idioma de la interfaz",
     "languageDescription": "Elige el idioma de visualización de la aplicación.",
     "english": "Inglés",

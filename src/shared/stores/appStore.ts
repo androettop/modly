@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import i18n from '../../i18n'
+import i18n from '@/i18n'
 
 export type BackendStatus = 'not_started' | 'starting' | 'ready' | 'error'
 export type SetupStatus = 'idle' | 'checking' | 'needed' | 'installing' | 'done' | 'error'
