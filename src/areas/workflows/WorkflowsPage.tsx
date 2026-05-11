@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { createPortal } from 'react-dom'
 import {
   ReactFlow,
@@ -91,6 +92,7 @@ function NewWorkflowModal({ onBlank, onTemplate, onClose }: {
   onTemplate: () => void
   onClose:    () => void
 }) {
+  const { t } = useTranslation()
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-[2px]"
@@ -101,8 +103,8 @@ function NewWorkflowModal({ onBlank, onTemplate, onClose }: {
         onMouseDown={(e) => e.stopPropagation()}
       >
         <div className="px-5 py-4 border-b border-zinc-800">
-          <h2 className="text-sm font-semibold text-zinc-100">New Workflow</h2>
-          <p className="text-[11px] text-zinc-500 mt-0.5">Choose how to start</p>
+          <h2 className="text-sm font-semibold text-zinc-100">{t('workflows.newWorkflow')}</h2>
+          <p className="text-[11px] text-zinc-500 mt-0.5">{t('workflows.chooseHowToStart')}</p>
         </div>
 
         <div className="p-4 grid grid-cols-2 gap-3">
@@ -117,8 +119,8 @@ function NewWorkflowModal({ onBlank, onTemplate, onClose }: {
               </svg>
             </div>
             <div className="text-center">
-              <p className="text-xs font-semibold text-zinc-200">Blank</p>
-              <p className="text-[10px] text-zinc-500 mt-0.5 leading-relaxed">Empty canvas</p>
+              <p className="text-xs font-semibold text-zinc-200">{t('workflows.blank')}</p>
+              <p className="text-[10px] text-zinc-500 mt-0.5 leading-relaxed">{t('workflows.blankDesc')}</p>
             </div>
           </button>
 
@@ -135,7 +137,7 @@ function NewWorkflowModal({ onBlank, onTemplate, onClose }: {
               </svg>
             </div>
             <div className="text-center">
-              <p className="text-xs font-semibold text-zinc-200">Starter</p>
+              <p className="text-xs font-semibold text-zinc-200">{t('workflows.starter')}</p>
               <p className="text-[10px] text-zinc-500 mt-0.5 leading-relaxed">Image → Scene</p>
             </div>
           </button>
@@ -182,6 +184,7 @@ function ExtGroupHeader({ title, author, expanded, onToggle, count }: { title: s
 }
 
 function ExtensionsPanel({ allExtensions, open }: { allExtensions: WorkflowExtension[]; open: boolean }) {
+  const { t } = useTranslation()
   const [search, setSearch]       = useState('')
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
   const [width, setWidth]         = useState(288)
@@ -248,8 +251,8 @@ function ExtensionsPanel({ allExtensions, open }: { allExtensions: WorkflowExten
 
           {/* Header */}
           <div className="px-4 py-3 border-b border-zinc-800">
-            <h2 className="text-xs font-semibold text-zinc-300">Extensions</h2>
-            <p className="text-[10px] text-zinc-600 mt-0.5">Drag onto canvas</p>
+            <h2 className="text-xs font-semibold text-zinc-300">{t('workflows.extensions')}</h2>
+            <p className="text-[10px] text-zinc-600 mt-0.5">{t('workflows.dragOntoCanvas')}</p>
           </div>
 
           {/* Search */}
@@ -779,6 +782,7 @@ function WorkflowCanvasInner({
   onNew:            () => void
   onImport:         () => void
 }) {
+  const { t } = useTranslation()
   const { screenToFlowPosition, updateNodeData, getNode } = useReactFlow()
   const { runState, run: runWorkflow, cancel } = useWorkflowRunStore()
   const isRunning = runState.status === 'running' || runState.status === 'paused'
@@ -1006,26 +1010,26 @@ function WorkflowCanvasInner({
         {/* New */}
         <button
           onClick={onNew}
-          title="New workflow"
+          title={t('workflows.newWorkflowTitle')}
           className="flex items-center gap-2 px-3.5 py-2 rounded-md text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 transition-colors shrink-0"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
-          <span className="text-sm font-medium">New</span>
+          <span className="text-sm font-medium">{t('workflows.new')}</span>
         </button>
 
         {/* Import */}
         <button
           onClick={onImport}
-          title="Import workflow"
+          title={t('workflows.importWorkflowTitle')}
           className="flex items-center gap-2 px-3.5 py-2 rounded-md text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 transition-colors shrink-0"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
           </svg>
-          <span className="text-sm font-medium">Import</span>
+          <span className="text-sm font-medium">{t('workflows.import')}</span>
         </button>
 
         <div className="w-px h-6 bg-zinc-800 mx-0.5 shrink-0" />
@@ -1061,7 +1065,7 @@ function WorkflowCanvasInner({
           value={name}
           onChange={(e) => setName(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
-          placeholder="Workflow name…"
+          placeholder={t('workflows.workflowNamePlaceholder')}
           className="flex-1 min-w-0 bg-zinc-800 border border-zinc-700/80 rounded-md px-3 py-2 text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-accent/60"
         />
 
@@ -1079,12 +1083,12 @@ function WorkflowCanvasInner({
             {isRunning ? (
               <>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
-                <span className="text-sm font-semibold">Stop</span>
+                <span className="text-sm font-semibold">{t('workflows.stop')}</span>
               </>
             ) : (
               <>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                <span className="text-sm font-semibold">Run</span>
+                <span className="text-sm font-semibold">{t('workflows.run')}</span>
               </>
             )}
           </button>
@@ -1126,7 +1130,7 @@ function WorkflowCanvasInner({
           {/* Help */}
           <button
             onClick={() => setHelpOpen(true)}
-            title="How workflows work"
+            title={t('workflows.howWorkflowsWork')}
             className="p-2.5 rounded-lg text-zinc-600 hover:text-zinc-200 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 transition-colors font-semibold text-sm w-[34px] h-[34px] flex items-center justify-center"
           >
             ?
@@ -1193,6 +1197,7 @@ function WorkflowCanvasInner({
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function WorkflowsPage(): JSX.Element {
+  const { t } = useTranslation()
   const { workflows, loading, activeId, load, save, remove, importFile, exportFile, setActive } = useWorkflowsStore()
   const { modelExtensions, processExtensions, loadExtensions } = useExtensionsStore()
 
@@ -1243,10 +1248,10 @@ export default function WorkflowsPage(): JSX.Element {
                   : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/20 border-transparent'
                 }`}
             >
-              <span className="truncate max-w-[120px]">{wf.name || 'Untitled'}</span>
+              <span className="truncate max-w-[120px]">{wf.name || t('workflows.untitled')}</span>
               <button
                 onClick={(e) => { e.stopPropagation(); remove(wf.id) }}
-                title="Close workflow"
+                title={t('workflows.closeWorkflowTitle')}
                 className="shrink-0 flex items-center justify-center w-4 h-4 rounded text-zinc-600 hover:text-zinc-300 hover:bg-zinc-700/60 transition-colors"
               >
                 <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -1283,15 +1288,15 @@ export default function WorkflowsPage(): JSX.Element {
               <path d="M9 5.5h3.5a1 1 0 0 1 1 1v5"/><rect x="13" y="9" width="8" height="7" rx="1"/>
             </svg>
             <div className="text-center">
-              <p className="text-sm font-medium">No workflows yet</p>
-              <p className="text-xs mt-1">Create one to get started</p>
+              <p className="text-sm font-medium">{t('workflows.noWorkflowsYet')}</p>
+              <p className="text-xs mt-1">{t('workflows.createOne')}</p>
             </div>
             <div className="flex items-center gap-2 mt-2">
               <button onClick={handleCreateBlank} className="px-4 py-2 rounded-lg bg-accent text-white text-xs font-semibold hover:bg-accent/90 transition-colors">
-                New Workflow
+                {t('workflows.newWorkflow')}
               </button>
               <button onClick={handleImport} className="px-4 py-2 rounded-lg border border-zinc-700 text-zinc-300 text-xs font-semibold hover:bg-zinc-800 transition-colors">
-                Import
+                {t('workflows.import')}
               </button>
             </div>
           </div>
