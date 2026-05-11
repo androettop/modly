@@ -1,8 +1,10 @@
 import { useState, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAppStore } from '@shared/stores/appStore'
 import { useGeneration } from '@shared/hooks/useGeneration'
 
 export default function ImageUpload(): JSX.Element {
+  const { t } = useTranslation()
   const { currentJob } = useGeneration()
   const { setSelectedImagePath, selectedImagePreviewUrl, setSelectedImagePreviewUrl, setSelectedImageData } = useAppStore()
   const [isDragging, setIsDragging] = useState(false)
@@ -49,7 +51,7 @@ export default function ImageUpload(): JSX.Element {
 
   return (
     <div className="flex flex-col p-4 gap-3">
-      <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500">Input Image</h2>
+      <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500">{t('generate.inputImage')}</h2>
 
       {/* Drop zone */}
       <div
@@ -96,7 +98,7 @@ export default function ImageUpload(): JSX.Element {
               <circle cx="8.5" cy="8.5" r="1.5" />
               <polyline points="21 15 16 10 5 21" />
             </svg>
-            <p className="text-xs text-center">Drop image here<br />or click to browse</p>
+            <p className="text-xs text-center">{t('generate.dropImage')}<br />{t('generate.orClickToBrowse')}</p>
           </div>
         )}
 

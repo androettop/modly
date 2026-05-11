@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useGeneration } from '@shared/hooks/useGeneration'
 
 function formatElapsed(seconds: number): string {
@@ -8,6 +9,7 @@ function formatElapsed(seconds: number): string {
 }
 
 export default function GenerationHUD(): JSX.Element | null {
+  const { t } = useTranslation()
   const { currentJob, reset } = useGeneration()
   const [elapsed, setElapsed] = useState(0)
   const [tqdmLog, setTqdmLog] = useState<string | null>(null)
@@ -61,7 +63,7 @@ export default function GenerationHUD(): JSX.Element | null {
               <div className="flex items-center gap-2.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                 <span className="text-sm font-medium text-zinc-200">
-                  {step ?? (status === 'uploading' ? 'Reading image…' : 'Generating 3D mesh…')}
+                  {step ?? (status === 'uploading' ? t('generate.readingImage') : t('generate.generating3D'))}
                 </span>
               </div>
               <span className="text-xs tabular-nums text-zinc-500">{formatElapsed(elapsed)}</span>
@@ -94,7 +96,7 @@ export default function GenerationHUD(): JSX.Element | null {
                   <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
               </div>
-              <span className="text-sm font-medium text-zinc-200">Generation failed</span>
+              <span className="text-sm font-medium text-zinc-200">{t('generate.generationFailed')}</span>
             </div>
             <p className="text-xs text-red-400 bg-red-950/40 border border-red-900/40 rounded-lg px-3 py-2 max-h-24 overflow-y-auto whitespace-pre-wrap break-words">
               {error}
@@ -104,7 +106,7 @@ export default function GenerationHUD(): JSX.Element | null {
                 onClick={reset}
                 className="flex-1 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-sm font-medium transition-colors"
               >
-                Try again
+                {t('generate.tryAgain')}
               </button>
               {error && (
                 <button
@@ -117,7 +119,7 @@ export default function GenerationHUD(): JSX.Element | null {
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-green-400">
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
-                      <span className="text-green-400">Copied</span>
+                      <span className="text-green-400">{t('generate.copied')}</span>
                     </>
                   ) : (
                     <>
@@ -125,7 +127,7 @@ export default function GenerationHUD(): JSX.Element | null {
                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                       </svg>
-                      <span>Copy</span>
+                      <span>{t('generate.copy')}</span>
                     </>
                   )}
                 </button>

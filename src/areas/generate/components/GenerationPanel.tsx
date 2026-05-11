@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useGeneration } from '@shared/hooks/useGeneration'
 
 function formatElapsed(seconds: number): string {
@@ -8,6 +9,7 @@ function formatElapsed(seconds: number): string {
 }
 
 export default function GenerationPanel(): JSX.Element {
+  const { t } = useTranslation()
   const { currentJob, reset } = useGeneration()
   const [elapsed, setElapsed] = useState(0)
   const startRef = useRef<number | null>(null)
@@ -43,16 +45,16 @@ export default function GenerationPanel(): JSX.Element {
   const { status: jobStatus, progress, step, error } = currentJob
 
   const statusLabel: Record<string, string> = {
-    uploading:  'Reading image…',
-    generating: step ?? 'Generating 3D mesh…',
-    done:       'Done!',
-    error:      'Generation failed',
+    uploading:  t('generate.readingImage'),
+    generating: step ?? t('generate.generating3D'),
+    done:       t('generate.done'),
+    error:      t('generate.generationFailed'),
   }
 
   return (
     <div className="flex flex-col px-4 pb-4 gap-3">
       <div className="h-px bg-zinc-800" />
-      <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500">Progress</h2>
+      <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500">{t('generate.progress')}</h2>
 
       {/* Step + timer */}
       <div className="flex items-center justify-between">
@@ -100,14 +102,14 @@ export default function GenerationPanel(): JSX.Element {
               disabled={exporting}
               className="flex-1 py-2 text-xs rounded-lg bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed text-zinc-200 transition-colors"
             >
-              {exporting ? 'Exporting…' : 'Export'}
+              {exporting ? t('generate.exporting') : t('generate.export')}
             </button>
           </div>
           <button
             onClick={reset}
             className="w-full py-2 text-xs rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors"
           >
-            New
+            {t('generate.new')}
           </button>
         </div>
       )}

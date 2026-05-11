@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { useTranslation } from 'react-i18next'
 import { useExtensionsStore } from '@shared/stores/extensionsStore'
 import type { AnyExtension, ModelExtension } from '@shared/types/electron.d'
 import { formatModelName } from './utils'
@@ -9,6 +10,8 @@ import type { ExtensionNode } from './components/ExtensionCard'
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function ModelsPage(): JSX.Element {
+  const { t } = useTranslation()
+
   // Extensions store
   const modelExtensions   = useExtensionsStore((s) => s.modelExtensions)
   const processExtensions = useExtensionsStore((s) => s.processExtensions)
@@ -96,8 +99,8 @@ export default function ModelsPage(): JSX.Element {
 
   async function handleGHInstall() {
     const url = ghUrl.trim()
-    if (!url) { setGhErr('GitHub URL required'); return }
-    if (!url.includes('github.com')) { setGhErr('Must be a GitHub URL'); return }
+    if (!url) { setGhErr(t('models.githubUrlRequired')); return }
+    if (!url.includes('github.com')) { setGhErr(t('models.mustBeGitHub')); return }
     setGhErr(null)
     clearInstall()
     const result = await installFromGH(url)
@@ -151,11 +154,11 @@ export default function ModelsPage(): JSX.Element {
   function installProgressLabel(): string {
     if (!installProgress) return ''
     switch (installProgress.step) {
-      case 'downloading': return `Downloading… ${installProgress.percent ?? 0}%`
-      case 'extracting':  return 'Extracting…'
-      case 'validating':  return 'Validating…'
-      case 'setting_up':  return 'Setting up environment…'
-      case 'done':        return 'Installed!'
+      case 'downloading': return `${t('models.downloading')} ${installProgress.percent ?? 0}%`
+      case 'extracting':  return t('models.extracting')
+      case 'validating':  return t('models.validating')
+      case 'setting_up':  return t('models.settingUp')
+      case 'done':        return t('models.installed')
       default:            return ''
     }
   }
@@ -168,7 +171,7 @@ export default function ModelsPage(): JSX.Element {
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <div className="px-6 pt-6 pb-4 border-b border-zinc-800/60 shrink-0">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-base font-semibold text-zinc-100">Extensions</h1>
+          <h1 className="text-base font-semibold text-zinc-100">{t('models.title')}</h1>
           <div className="flex items-center gap-2">
 
             <button
@@ -178,7 +181,7 @@ export default function ModelsPage(): JSX.Element {
               <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.729.083-.729 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.997.108-.776.418-1.305.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.468-2.38 1.235-3.22-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23A11.51 11.51 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .322.216.694.825.576C20.565 21.796 24 17.298 24 12c0-6.63-5.37-12-12-12z"/>
               </svg>
-              {showGHForm ? 'Cancel' : 'Install from GitHub'}
+              {showGHForm ? t('models.cancel') : t('models.installFromGitHub')}
             </button>
           </div>
         </div>
@@ -193,7 +196,7 @@ export default function ModelsPage(): JSX.Element {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search extensions…"
+              placeholder={t('models.searchPlaceholder')}
               className="flex-1 bg-transparent text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none"
             />
             {search && (
@@ -212,7 +215,7 @@ export default function ModelsPage(): JSX.Element {
           <button
             onClick={reloadExtensions}
             disabled={extLoading}
-            title="Reload extensions"
+            title={t('models.reloadExtensions')}
             className="p-2.5 rounded-xl bg-zinc-800/60 border border-zinc-700/60 text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 hover:border-zinc-600 transition-colors disabled:opacity-40"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
@@ -253,7 +256,7 @@ export default function ModelsPage(): JSX.Element {
                     <line x1="12" y1="15" x2="12" y2="3"/>
                   </svg>
                 )}
-                {isInstalling ? installProgressLabel() : 'Install'}
+                {isInstalling ? installProgressLabel() : t('models.install')}
               </button>
             </div>
 
@@ -272,10 +275,10 @@ export default function ModelsPage(): JSX.Element {
                   <div className="flex items-center gap-2 min-w-0">
                     <div className="w-3 h-3 rounded-full border-2 border-accent/40 border-t-accent animate-spin shrink-0" />
                     <span className="text-[10px] text-zinc-400 truncate">
-                      {installProgress.message ?? 'Setting up environment…'}
+                      {installProgress.message ?? t('models.settingUp')}
                     </span>
                   </div>
-                  <span className="text-[9px] text-zinc-600 shrink-0">May take a few minutes</span>
+                  <span className="text-[9px] text-zinc-600 shrink-0">{t('models.mayTakeMinutes')}</span>
                 </div>
                 {/* Indeterminate progress bar */}
                 <div className="h-0.5 rounded-full bg-zinc-700 overflow-hidden">
@@ -289,7 +292,7 @@ export default function ModelsPage(): JSX.Element {
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="text-emerald-400 shrink-0">
                   <polyline points="20 6 9 17 4 12"/>
                 </svg>
-                <p className="text-[11px] text-emerald-400">Extension installed successfully!</p>
+                <p className="text-[11px] text-emerald-400">{t('models.installSuccess')}</p>
               </div>
             )}
 
@@ -302,9 +305,7 @@ export default function ModelsPage(): JSX.Element {
               </div>
             )}
 
-            <p className="text-[10px] text-zinc-600">
-              The repo must contain a <span className="font-mono text-zinc-500">manifest.json</span> and a <span className="font-mono text-zinc-500">generator.py</span> at its root.
-            </p>
+            <p className="text-[10px] text-zinc-600">{t('models.mustContainManifest')}</p>
           </div>
         </div>
       )}
@@ -319,10 +320,8 @@ export default function ModelsPage(): JSX.Element {
               <line x1="12" y1="22.08" x2="12" y2="12"/>
             </svg>
             <div className="text-center">
-              <p className="text-sm font-medium text-zinc-400">No extensions installed</p>
-              <p className="text-xs text-zinc-600 mt-1">
-                Install from GitHub or drop into <span className="font-mono text-zinc-500">%appdata%/Modly/extensions</span>
-              </p>
+              <p className="text-sm font-medium text-zinc-400">{t('models.noExtensionsInstalled')}</p>
+              <p className="text-xs text-zinc-600 mt-1">{t('models.noExtensionsDescription')}</p>
             </div>
           </div>
         ) : extLoading ? (
@@ -334,7 +333,7 @@ export default function ModelsPage(): JSX.Element {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-zinc-700">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
-            <p className="text-sm text-zinc-500">No results for <span className="text-zinc-300">"{search}"</span></p>
+            <p className="text-sm text-zinc-500">{t('models.noResults')} <span className="text-zinc-300">"{search}"</span></p>
           </div>
         ) : (
           <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))' }}>
@@ -396,10 +395,10 @@ export default function ModelsPage(): JSX.Element {
                   </div>
                   <div className="flex flex-col gap-1 pt-0.5">
                     <h2 className="text-base font-semibold text-zinc-100 leading-tight">
-                      Uninstall &ldquo;{ext?.name ?? uninstallTarget}&rdquo;?
+                      {t('models.uninstall')} &ldquo;{ext?.name ?? uninstallTarget}&rdquo;?
                     </h2>
                     <p className="text-xs text-zinc-500 leading-relaxed">
-                      The extension folder will be permanently deleted.
+                      {t('models.extensionFolderDeleted')}
                     </p>
                   </div>
                 </div>
@@ -407,7 +406,7 @@ export default function ModelsPage(): JSX.Element {
                 {installedModels.length > 0 && (
                   <div className="flex flex-col gap-2 px-1">
                     <p className="text-[11px] font-medium text-zinc-400">
-                      Also delete downloaded model weights:
+                      {t('models.alsoDeleteWeights')}
                     </p>
                     {installedModels.map((v) => {
                       const id      = `${uninstallTarget}/${v.id}`
@@ -442,13 +441,13 @@ export default function ModelsPage(): JSX.Element {
                     onClick={() => { setUninstallTarget(null); setModelsToDelete(new Set()) }}
                     className="flex-1 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700/80 text-zinc-400 hover:text-zinc-200 text-sm font-medium transition-colors border border-zinc-700/50"
                   >
-                    Cancel
+                    {t('models.cancel')}
                   </button>
                   <button
                     onClick={() => handleUninstallExtension(uninstallTarget)}
                     className="flex-1 py-2.5 rounded-xl bg-accent hover:bg-accent-dark text-white text-sm font-semibold transition-colors shadow-lg shadow-accent/20"
                   >
-                    Uninstall
+                    {t('models.uninstallTitle')}
                   </button>
                 </div>
               </div>

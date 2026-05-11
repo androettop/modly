@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import type { ViewMode } from '../models'
 export type { ViewMode }
 
@@ -9,63 +10,6 @@ interface ViewerToolbarProps {
   onScreenshot: () => void
 }
 
-const MODES: { mode: ViewMode; icon: React.ReactNode; label: string }[] = [
-  {
-    mode: 'solid',
-    label: 'Solid',
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-      </svg>
-    ),
-  },
-  {
-    mode: 'wireframe',
-    label: 'Wireframe',
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-        <rect x="3" y="3" width="18" height="18" rx="1" />
-        <line x1="3" y1="9" x2="21" y2="9" />
-        <line x1="3" y1="15" x2="21" y2="15" />
-        <line x1="9" y1="3" x2="9" y2="21" />
-        <line x1="15" y1="3" x2="15" y2="21" />
-      </svg>
-    ),
-  },
-  {
-    mode: 'normals',
-    label: 'Normals',
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-        <circle cx="12" cy="12" r="9" />
-        <ellipse cx="12" cy="12" rx="4" ry="9" />
-        <line x1="3" y1="12" x2="21" y2="12" />
-      </svg>
-    ),
-  },
-  {
-    mode: 'matcap',
-    label: 'Matcap',
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-        <circle cx="12" cy="12" r="9" />
-        <path d="M8 10 Q10 7 12 10 Q14 13 16 10" />
-      </svg>
-    ),
-  },
-  {
-    mode: 'uv',
-    label: 'UV Checker',
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-        <rect x="3" y="3" width="18" height="18" rx="1" />
-        <rect x="3" y="3" width="9" height="9" fill="currentColor" fillOpacity="0.3" />
-        <rect x="12" y="12" width="9" height="9" fill="currentColor" fillOpacity="0.3" />
-      </svg>
-    ),
-  },
-]
-
 export function ViewerToolbar({
   viewMode,
   autoRotate,
@@ -73,6 +17,65 @@ export function ViewerToolbar({
   onAutoRotate,
   onScreenshot,
 }: ViewerToolbarProps): JSX.Element {
+  const { t } = useTranslation()
+
+  const MODES: { mode: ViewMode; icon: React.ReactNode; label: string }[] = [
+    {
+      mode: 'solid',
+      label: t('viewer.solid'),
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
+      ),
+    },
+    {
+      mode: 'wireframe',
+      label: t('viewer.wireframe'),
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+          <rect x="3" y="3" width="18" height="18" rx="1" />
+          <line x1="3" y1="9" x2="21" y2="9" />
+          <line x1="3" y1="15" x2="21" y2="15" />
+          <line x1="9" y1="3" x2="9" y2="21" />
+          <line x1="15" y1="3" x2="15" y2="21" />
+        </svg>
+      ),
+    },
+    {
+      mode: 'normals',
+      label: t('viewer.normals'),
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+          <circle cx="12" cy="12" r="9" />
+          <ellipse cx="12" cy="12" rx="4" ry="9" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+        </svg>
+      ),
+    },
+    {
+      mode: 'matcap',
+      label: t('viewer.matcap'),
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M8 10 Q10 7 12 10 Q14 13 16 10" />
+        </svg>
+      ),
+    },
+    {
+      mode: 'uv',
+      label: t('viewer.uvChecker'),
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+          <rect x="3" y="3" width="18" height="18" rx="1" />
+          <rect x="3" y="3" width="9" height="9" fill="currentColor" fillOpacity="0.3" />
+          <rect x="12" y="12" width="9" height="9" fill="currentColor" fillOpacity="0.3" />
+        </svg>
+      ),
+    },
+  ]
+
   return (
     <div className="absolute left-4 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-1 bg-zinc-900/70 border border-zinc-700/50 backdrop-blur-sm rounded-xl p-1.5">
       {MODES.map(({ mode, icon, label }) => (
@@ -90,7 +93,7 @@ export function ViewerToolbar({
 
       <ToolbarButton
         active={autoRotate}
-        label="Auto-rotate"
+        label={t('viewer.autoRotate')}
         onClick={onAutoRotate}
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
@@ -101,7 +104,7 @@ export function ViewerToolbar({
 
       <ToolbarButton
         active={false}
-        label="Screenshot"
+        label={t('viewer.screenshot')}
         onClick={onScreenshot}
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">

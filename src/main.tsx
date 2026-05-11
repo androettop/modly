@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import '@styles/globals.css'
 import '@xyflow/react/dist/style.css'
+import './i18n'
 
 window.addEventListener('error', (e) => {
   window.electron.log.error(`${e.message} — ${e.filename}:${e.lineno}`)

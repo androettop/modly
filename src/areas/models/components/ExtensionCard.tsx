@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { AnyExtension } from '@shared/types/electron.d'
 export type { AnyExtension as Extension }
 export type { ExtensionNode } from '@shared/types/electron.d'
@@ -21,6 +22,7 @@ const TYPE_BADGE: Record<string, { label: string; cls: string }> = {
 }
 
 export function ExtensionCard({ ext, installedIds, downloading, loadError, disabled, onInstall, onUninstall, onUninstallNode, onRepaired }: Props): JSX.Element {
+  const { t } = useTranslation()
   const [repairing,   setRepairing]   = useState(false)
   const [repairError, setRepairError] = useState<string | null>(null)
 
@@ -67,7 +69,7 @@ export function ExtensionCard({ ext, installedIds, downloading, loadError, disab
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                   <polyline points="9 12 11 14 15 10"/>
                 </svg>
-                Official
+                {t('models.official')}
               </span>
             )}
           </div>
@@ -87,7 +89,7 @@ export function ExtensionCard({ ext, installedIds, downloading, loadError, disab
           <button
             onClick={() => onUninstall(ext.id)}
             disabled={disabled}
-            title={disabled ? 'Cannot uninstall while an install is in progress' : 'Uninstall extension'}
+            title={disabled ? t('models.cannotUninstall') : t('models.uninstall')}
             className="shrink-0 p-1.5 rounded-lg text-zinc-700 hover:text-red-400 hover:bg-red-950/30 transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-zinc-700 disabled:hover:bg-transparent"
           >
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -124,7 +126,7 @@ export function ExtensionCard({ ext, installedIds, downloading, loadError, disab
               <path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
             </svg>
           )}
-          {repairing ? 'Repairing…' : 'Repair'}
+          {repairing ? t('models.repairing') : t('models.repair')}
         </button>
       )}
 
@@ -170,7 +172,7 @@ export function ExtensionCard({ ext, installedIds, downloading, loadError, disab
                       <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="text-emerald-400 shrink-0">
                         <polyline points="20 6 9 17 4 12"/>
                       </svg>
-                      <span className="text-[10px] font-semibold text-emerald-400">Ready</span>
+                      <span className="text-[10px] font-semibold text-emerald-400">{t('models.ready')}</span>
                     </div>
                   ) : isDownloading ? (
                     <div className="flex flex-col gap-1">
@@ -199,7 +201,7 @@ export function ExtensionCard({ ext, installedIds, downloading, loadError, disab
                         <button
                           onClick={(e) => { e.stopPropagation(); onUninstallNode(fullId) }}
                           disabled={disabled}
-                          title="Remove model weights"
+                          title={t('models.removeWeights')}
                           className="shrink-0 text-emerald-700 hover:text-red-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                         >
                           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -213,7 +215,7 @@ export function ExtensionCard({ ext, installedIds, downloading, loadError, disab
                     <button
                       onClick={() => !disabled && onInstall(node, fullId)}
                       disabled={disabled}
-                      title={disabled ? 'A download is already in progress' : `Download ${node.name} weights`}
+                      title={disabled ? t('models.downloadInProgress') : `Download ${node.name} weights`}
                       className={`w-full flex items-center justify-center gap-1 px-2 py-1 rounded-lg border text-[10px] font-semibold transition-all ${
                         !disabled
                           ? 'bg-accent/15 border-accent/25 text-accent-light hover:bg-accent/25 hover:border-accent/40 cursor-pointer'
@@ -225,7 +227,7 @@ export function ExtensionCard({ ext, installedIds, downloading, loadError, disab
                         <polyline points="7 10 12 15 17 10"/>
                         <line x1="12" y1="15" x2="12" y2="3"/>
                       </svg>
-                      Download
+                      {t('models.download')}
                     </button>
                   )}
                 </div>

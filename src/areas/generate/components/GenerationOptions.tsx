@@ -1,15 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAppStore } from '@shared/stores/appStore'
 import { useApi } from '@shared/hooks/useApi'
 import { FieldLabel, Tooltip, ConfirmModal } from '@shared/components/ui'
 
 import type { CatalogModel } from '../models'
-
-const REMESH_OPTIONS = [
-  { label: 'Quad',     value: 'quad'     },
-  { label: 'Triangle', value: 'triangle' },
-  { label: 'None',     value: 'none'     },
-] as const
 
 // ─── Schema types ──────────────────────────────────────────────────────────────
 
@@ -183,6 +178,7 @@ interface ModelSelectProps {
 }
 
 function ModelSelect({ models, value, onChange }: ModelSelectProps): JSX.Element {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -203,7 +199,7 @@ function ModelSelect({ models, value, onChange }: ModelSelectProps): JSX.Element
         <div className="w-7 h-7 rounded-lg bg-zinc-800 flex items-center justify-center">
           <ModelIcon />
         </div>
-        No model downloaded
+        {t('generate.noModelDownloaded')}
       </div>
     )
   }
@@ -280,7 +276,14 @@ function ModelSelect({ models, value, onChange }: ModelSelectProps): JSX.Element
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function GenerationOptions(): JSX.Element {
+  const { t } = useTranslation()
   const { generationOptions, setGenerationOptions, currentJob, apiUrl } = useAppStore()
+
+  const REMESH_OPTIONS = [
+    { label: t('generate.quad'),     value: 'quad'     },
+    { label: t('generate.triangle'), value: 'triangle' },
+    { label: t('generate.none'),     value: 'none'     },
+  ] as const
   const [models, setModels] = useState<CatalogModel[]>([])
   const [textureResolutionRaw, setTextureResolutionRaw] = useState(
     String(generationOptions.textureResolution ?? 512)
@@ -362,13 +365,13 @@ export default function GenerationOptions(): JSX.Element {
     <>
     <div className={`flex flex-col px-4 pb-4 gap-3 ${isDisabled ? 'opacity-50 pointer-events-none' : ''}`}>
       <div className="h-px bg-zinc-800" />
-      <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500">Options</h2>
+      <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500">{t('generate.options')}</h2>
 
       {/* Model */}
       <div className="flex flex-col gap-1.5">
         <FieldLabel
-          label="Model"
-          tooltip="The AI model used to generate the 3D mesh from your image. Only downloaded models are shown."
+          label={t('generate.model')}
+          tooltip={t('generate.modelTooltip')}
         />
         <ModelSelect
           models={models}
@@ -380,8 +383,8 @@ export default function GenerationOptions(): JSX.Element {
       {/* Remesh */}
       <div className="flex flex-col gap-1.5">
         <FieldLabel
-          label="Remesh"
-          tooltip="Quad produces clean topology ideal for animation and sculpting. Triangle is faster and more compatible. None skips remeshing entirely."
+          label={t('generate.remesh')}
+          tooltip={t('generate.remeshTooltip')}
         />
         <div className="flex gap-1.5">
           {REMESH_OPTIONS.map((opt) => (
@@ -413,14 +416,14 @@ export default function GenerationOptions(): JSX.Element {
       {/* Separator */}
       <div className="flex items-center gap-2 pt-1">
         <div className="h-px flex-1 bg-zinc-800" />
-        <span className="text-xs font-semibold uppercase tracking-widest text-zinc-600">Texture</span>
+        <span className="text-xs font-semibold uppercase tracking-widest text-zinc-600">{t('generate.texture')}</span>
         <div className="h-px flex-1 bg-zinc-800" />
       </div>
 
       {/* Texture */}
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center w-full">
-          <span className="text-sm text-zinc-300">Generate Texture</span>
+          <span className="text-sm text-zinc-300">{t('generate.generateTexture')}</span>
           <button
             role="checkbox"
             aria-checked={generationOptions.enableTexture}
@@ -440,7 +443,7 @@ export default function GenerationOptions(): JSX.Element {
             }`} />
           </button>
           <span className="ml-auto">
-            <Tooltip content="Bake UV-mapped textures onto the mesh. Requires uv_unwrapper and texture_baker to be compiled.">
+            <Tooltip content={t('generate.textureTooltip')}>
               <span className="w-5 h-5 rounded-full flex items-center justify-center text-zinc-600 hover:text-accent-light transition-colors cursor-default select-none">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="10" />
@@ -454,8 +457,8 @@ export default function GenerationOptions(): JSX.Element {
 
         <div className={`flex flex-col gap-1 transition-opacity ${generationOptions.enableTexture ? '' : 'opacity-40'}`}>
             <FieldLabel
-              label="Texture Resolution"
-              tooltip="Width and height of the baked texture in pixels. Higher values give more detail but take longer. Must be between 64 and 2048."
+              label={t('generate.textureResolution')}
+              tooltip={t('generate.textureResolutionTooltip')}
             />
             <div className="flex items-center gap-2">
               <input
@@ -483,10 +486,10 @@ export default function GenerationOptions(): JSX.Element {
 
     {showTextureWarning && (
       <ConfirmModal
-        title="Texture generation is experimental"
-        description="This feature is still in development and may produce unexpected results, crash, or significantly slow down generation. Use at your own risk."
-        confirmLabel="Enable anyway"
-        cancelLabel="Cancel"
+        title={t('generate.textureWarningTitle')}
+        description={t('generate.textureWarningDescription')}
+        confirmLabel={t('generate.enableAnyway')}
+        cancelLabel={t('generate.cancel')}
         onConfirm={() => {
           setGenerationOptions({ enableTexture: true })
           setShowTextureWarning(false)

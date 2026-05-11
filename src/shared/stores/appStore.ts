@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import i18n from '../../i18n'
 
 export type BackendStatus = 'not_started' | 'starting' | 'ready' | 'error'
 export type SetupStatus = 'idle' | 'checking' | 'needed' | 'installing' | 'done' | 'error'
@@ -93,6 +94,10 @@ interface AppState {
   undoMesh: () => void
   redoMesh: () => void
   clearMeshHistory: () => void
+
+  // Language
+  language: 'en' | 'es'
+  setLanguage: (lang: 'en' | 'es') => void
 
   // Actions
   initApp: () => Promise<void>
@@ -211,6 +216,12 @@ export const useAppStore = create<AppState>()(
         }
       },
 
+      language: 'en',
+      setLanguage: (lang) => {
+        set({ language: lang })
+        i18n.changeLanguage(lang)
+      },
+
       setCurrentJob: (job) => set({ currentJob: job, meshStats: job === null ? null : get().meshStats }),
 
       updateCurrentJob: (patch) => {
@@ -227,7 +238,13 @@ export const useAppStore = create<AppState>()(
       name: 'modly-store',
       partialize: (state) => ({
         generationOptions: state.generationOptions,
+        language: state.language,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (state?.language) {
+          i18n.changeLanguage(state.language)
+        }
+      },
     }
   )
 )

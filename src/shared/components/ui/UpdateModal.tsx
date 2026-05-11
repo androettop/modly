@@ -1,4 +1,5 @@
 import { createPortal } from 'react-dom'
+import { useTranslation } from 'react-i18next'
 import logo from '../../../../resources/icons/icon.png'
 
 interface UpdateModalProps {
@@ -8,6 +9,7 @@ interface UpdateModalProps {
 }
 
 export function UpdateModal({ currentVersion, latestVersion, onDismiss }: UpdateModalProps): JSX.Element {
+  const { t } = useTranslation()
   const handleDownload = (): void => {
     window.open('https://github.com/lightningpixel/modly/releases', '_blank')
   }
@@ -28,8 +30,8 @@ export function UpdateModal({ currentVersion, latestVersion, onDismiss }: Update
           <div className="relative flex items-center gap-4">
             <img src={logo} alt="Modly" className="w-12 h-12 rounded-xl shrink-0" />
             <div>
-              <h2 className="text-lg font-semibold text-zinc-100 leading-tight">New update available</h2>
-              <p className="text-sm text-zinc-500 mt-0.5">A new version of Modly is ready to download.</p>
+              <h2 className="text-lg font-semibold text-zinc-100 leading-tight">{t('updateModal.title')}</h2>
+              <p className="text-sm text-zinc-500 mt-0.5">{t('updateModal.description')}</p>
             </div>
           </div>
         </div>
@@ -39,7 +41,7 @@ export function UpdateModal({ currentVersion, latestVersion, onDismiss }: Update
 
           <div className="flex items-center gap-3 p-4 rounded-xl bg-zinc-800/60 border border-zinc-700/50">
             <div className="flex-1 flex flex-col items-center gap-1">
-              <span className="text-[11px] uppercase tracking-widest text-zinc-500 font-medium">Current</span>
+              <span className="text-[11px] uppercase tracking-widest text-zinc-500 font-medium">{t('updateModal.current')}</span>
               <span className="text-base font-mono font-semibold text-zinc-400">
                 {currentVersion ? `v${currentVersion}` : '—'}
               </span>
@@ -53,13 +55,13 @@ export function UpdateModal({ currentVersion, latestVersion, onDismiss }: Update
             </div>
 
             <div className="flex-1 flex flex-col items-center gap-1">
-              <span className="text-[11px] uppercase tracking-widest text-accent-light font-medium">Latest</span>
+              <span className="text-[11px] uppercase tracking-widest text-accent-light font-medium">{t('updateModal.latest')}</span>
               <span className="text-base font-mono font-semibold text-zinc-100">{latestVersion}</span>
             </div>
           </div>
 
           <p className="text-xs text-zinc-500 leading-relaxed">
-            Download the latest release from GitHub to get bug fixes, improvements, and new features.
+            {t('updateModal.releaseDescription')}
           </p>
 
           {/* Actions */}
@@ -68,7 +70,7 @@ export function UpdateModal({ currentVersion, latestVersion, onDismiss }: Update
               onClick={onDismiss}
               className="flex-1 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700/80 text-zinc-400 hover:text-zinc-200 text-sm font-medium transition-colors border border-zinc-700/50"
             >
-              Later
+              {t('updateModal.later')}
             </button>
             <button
               onClick={handleDownload}
@@ -79,7 +81,7 @@ export function UpdateModal({ currentVersion, latestVersion, onDismiss }: Update
                 <polyline points="7 10 12 15 17 10" />
                 <line x1="12" y1="15" x2="12" y2="3" />
               </svg>
-              Download
+              {t('updateModal.download')}
             </button>
           </div>
 

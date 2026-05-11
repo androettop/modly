@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAppStore, SetupProgress } from '@shared/stores/appStore'
 
 // ─── Logo (shared) ──────────────────────────────────────────────────────────
@@ -25,11 +26,12 @@ function ModlyLogo(): JSX.Element {
 }
 
 function AppHeader(): JSX.Element {
+  const { t } = useTranslation()
   return (
     <>
       <ModlyLogo />
       <h1 className="text-2xl font-semibold text-zinc-100 mb-1">Modly</h1>
-      <p className="text-sm text-zinc-500 mb-10">AI-powered 3D mesh generation</p>
+      <p className="text-sm text-zinc-500 mb-10">{t('setup.subtitle')}</p>
     </>
   )
 }
@@ -37,9 +39,10 @@ function AppHeader(): JSX.Element {
 // ─── Panels ─────────────────────────────────────────────────────────────────
 
 function CheckingPanel(): JSX.Element {
+  const { t } = useTranslation()
   return (
     <div className="w-80 bg-surface-300 rounded-xl p-6">
-      <p className="text-sm font-medium text-zinc-100">Checking environment…</p>
+      <p className="text-sm font-medium text-zinc-100">{t('setup.checking')}</p>
       <div className="mt-4 h-1 bg-zinc-800 rounded-full overflow-hidden">
         <div className="h-full bg-accent rounded-full animate-pulse" style={{ width: '30%' }} />
       </div>
@@ -54,6 +57,7 @@ function ChoosePathPanel({
   defaultPath: string
   onConfirm: (path: string) => void
 }): JSX.Element {
+  const { t } = useTranslation()
   const [selectedPath, setSelectedPath] = useState(defaultPath || '')
 
   // Sync if defaultPath arrives after mount (async IPC)
@@ -68,24 +72,23 @@ function ChoosePathPanel({
 
   return (
     <div className="w-80 bg-surface-300 rounded-xl p-6">
-      <p className="text-sm font-medium text-zinc-100 mb-1">Choose a data folder</p>
+      <p className="text-sm font-medium text-zinc-100 mb-1">{t('setup.chooseFolder')}</p>
       <p className="text-xs text-zinc-500 mb-4">
-        Models can be several GB each. Choose a folder on a drive with plenty of free space —
-        preferably not your system drive (C:).
+        {t('setup.chooseFolderDescription')}
       </p>
 
       {/* Path display */}
       <div className="flex items-center gap-2 mb-4">
         <div className="flex-1 min-w-0 bg-zinc-900 rounded-lg px-3 py-2">
           <p className="text-xs font-mono text-zinc-400 truncate" title={selectedPath}>
-            {selectedPath || 'No folder selected'}
+            {selectedPath || t('setup.noFolderSelected')}
           </p>
         </div>
         <button
           onClick={handleBrowse}
           className="shrink-0 px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg text-xs font-medium transition-colors"
         >
-          Browse…
+          {t('setup.browse')}
         </button>
       </div>
 
@@ -94,29 +97,29 @@ function ChoosePathPanel({
         disabled={!selectedPath}
         className="w-full py-2 bg-accent hover:bg-accent-dark disabled:opacity-40 disabled:cursor-not-allowed rounded-lg text-sm font-medium text-white transition-colors"
       >
-        Continue
+        {t('setup.continue')}
       </button>
     </div>
   )
 }
 
-const STEPS = [
-  { key: 'enabling-site', label: 'Preparing Python' },
-  { key: 'pip',           label: 'Installing pip' },
-  { key: 'packages',      label: 'Installing packages' },
-] as const
-
-function stepIndex(step: string): number {
-  return STEPS.findIndex((s) => s.key === step)
+function stepIndex(step: string, steps: readonly { key: string; label: string }[]): number {
+  return steps.findIndex((s) => s.key === step)
 }
 
 function InstallingPanel({ progress }: { progress: SetupProgress | null }): JSX.Element {
-  const currentIdx = progress ? stepIndex(progress.step) : -1
+  const { t } = useTranslation()
+  const STEPS = [
+    { key: 'enabling-site', label: t('setup.preparingPython') },
+    { key: 'pip',           label: t('setup.installingPip') },
+    { key: 'packages',      label: t('setup.installingPackages') },
+  ] as const
+  const currentIdx = progress ? stepIndex(progress.step, STEPS) : -1
   const percent = progress?.percent ?? 0
 
   return (
     <div className="w-80 bg-surface-300 rounded-xl p-6">
-      <p className="text-sm font-medium text-zinc-100 mb-4">Setting up environment…</p>
+      <p className="text-sm font-medium text-zinc-100 mb-4">{t('setup.settingUp')}</p>
 
       {/* Step indicators */}
       <div className="flex gap-2 mb-4">
@@ -150,7 +153,7 @@ function InstallingPanel({ progress }: { progress: SetupProgress | null }): JSX.
 
       <div className="flex justify-between items-center">
         <p className="text-xs text-zinc-500 truncate flex-1 min-w-0">
-          {progress?.currentPackage ?? (currentIdx >= 0 ? STEPS[currentIdx]?.label : 'Initialising…')}
+          {progress?.currentPackage ?? (currentIdx >= 0 ? STEPS[currentIdx]?.label : t('setup.initialising'))}
         </p>
         <p className="text-xs text-zinc-500 ml-2 shrink-0">{percent}%</p>
       </div>
@@ -159,10 +162,11 @@ function InstallingPanel({ progress }: { progress: SetupProgress | null }): JSX.
 }
 
 function StartingPanel(): JSX.Element {
+  const { t } = useTranslation()
   return (
     <div className="w-80 bg-surface-300 rounded-xl p-6">
-      <p className="text-sm font-medium text-zinc-100">Starting backend…</p>
-      <p className="text-xs text-zinc-500 mt-1">Launching the local AI server</p>
+      <p className="text-sm font-medium text-zinc-100">{t('setup.starting')}</p>
+      <p className="text-xs text-zinc-500 mt-1">{t('setup.launchingServer')}</p>
       <div className="mt-4 h-1 bg-zinc-800 rounded-full overflow-hidden">
         <div className="h-full bg-accent rounded-full animate-pulse" style={{ width: '40%' }} />
       </div>
@@ -171,6 +175,7 @@ function StartingPanel(): JSX.Element {
 }
 
 function ApplyingUpdatePanel({ version }: { version: string }): JSX.Element {
+  const { t } = useTranslation()
   return (
     <div className="w-80 bg-surface-300 rounded-xl p-6">
       <div className="flex items-center gap-3 mb-4">
@@ -181,8 +186,8 @@ function ApplyingUpdatePanel({ version }: { version: string }): JSX.Element {
           </svg>
         </div>
         <div>
-          <p className="text-sm font-medium text-zinc-100">Applying update {version}</p>
-          <p className="text-xs text-zinc-500 mt-0.5">The app will restart automatically</p>
+          <p className="text-sm font-medium text-zinc-100">{t('setup.applyingUpdate', { version })}</p>
+          <p className="text-xs text-zinc-500 mt-0.5">{t('setup.restartAutomatically')}</p>
         </div>
       </div>
       <div className="h-1 bg-zinc-800 rounded-full overflow-hidden">
@@ -193,12 +198,13 @@ function ApplyingUpdatePanel({ version }: { version: string }): JSX.Element {
 }
 
 function ErrorPanel({ message }: { message: string | null }): JSX.Element {
-  const lines = (message ?? 'Check the console for details').split('\n')
+  const { t } = useTranslation()
+  const lines = (message ?? t('setup.checkConsole')).split('\n')
   const isAntivirusHint = message?.includes('antivirus') ?? false
 
   return (
     <div className="w-80 bg-surface-300 rounded-xl p-6">
-      <p className="text-sm font-medium text-zinc-100">Something went wrong</p>
+      <p className="text-sm font-medium text-zinc-100">{t('setup.somethingWrong')}</p>
       <div className="mt-2 space-y-1 max-h-48 overflow-y-auto">
         {lines.map((line, i) =>
           line === '' ? (
@@ -210,9 +216,9 @@ function ErrorPanel({ message }: { message: string | null }): JSX.Element {
       </div>
       {isAntivirusHint && (
         <div className="mt-3 p-3 bg-amber-950/40 border border-amber-700/40 rounded-lg">
-          <p className="text-xs text-amber-400 font-medium">Antivirus detected</p>
+          <p className="text-xs text-amber-400 font-medium">{t('setup.antivirusDetected')}</p>
           <p className="text-xs text-amber-500/80 mt-0.5">
-            Add the app folder to your antivirus exclusions, then click Retry.
+            {t('setup.antivirusHint')}
           </p>
         </div>
       )}
@@ -220,7 +226,7 @@ function ErrorPanel({ message }: { message: string | null }): JSX.Element {
         onClick={() => window.location.reload()}
         className="mt-4 w-full py-2 bg-accent hover:bg-accent-dark rounded-lg text-sm font-medium text-white transition-colors"
       >
-        Retry
+        {t('setup.retry')}
       </button>
     </div>
   )

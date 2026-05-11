@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAppStore } from '@shared/stores/appStore'
 
 export function ErrorModal(): JSX.Element | null {
+  const { t } = useTranslation()
   const { errorModal, hideError } = useAppStore()
   const [copied, setCopied] = useState(false)
 
@@ -26,7 +28,7 @@ export function ErrorModal(): JSX.Element | null {
               <line x1="12" y1="16" x2="12.01" y2="16" />
             </svg>
           </div>
-          <span className="text-sm font-semibold text-zinc-100">An error occurred</span>
+          <span className="text-sm font-semibold text-zinc-100">{t('errorModal.title')}</span>
         </div>
 
         {/* Error message — selectable */}
@@ -42,13 +44,13 @@ export function ErrorModal(): JSX.Element | null {
             onClick={handleCopy}
             className="px-4 py-2 text-xs font-semibold rounded-lg bg-zinc-700/60 hover:bg-zinc-700 text-zinc-200 transition-colors"
           >
-            {copied ? 'Copied!' : 'Copy'}
+            {copied ? t('errorModal.copied') : t('errorModal.copy')}
           </button>
           <button
             onClick={hideError}
             className="px-4 py-2 text-xs font-semibold rounded-lg bg-accent hover:bg-accent-dark text-white transition-colors"
           >
-            Dismiss
+            {t('errorModal.dismiss')}
           </button>
         </div>
       </div>

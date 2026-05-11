@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Section, Card, Row, PathRow } from '@shared/ui'
 
 // ─── MoveFolderModal ──────────────────────────────────────────────────────────
@@ -17,6 +18,7 @@ function MoveFolderModal({ title, currentDir, items, itemLabel, moveLabel, moveD
   onMove: () => void
   onDelete: () => void
 }): JSX.Element {
+  const { t } = useTranslation()
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
       <div className="w-[440px] rounded-2xl border border-zinc-700/60 bg-zinc-900 shadow-2xl overflow-hidden">
@@ -24,17 +26,17 @@ function MoveFolderModal({ title, currentDir, items, itemLabel, moveLabel, moveD
         <div className="px-6 pt-5 pb-4">
           <h3 className="text-sm font-semibold text-zinc-100">{title}</h3>
           <p className="text-xs text-zinc-500 mt-1">
-            {items.length} {itemLabel}{items.length > 1 ? 's' : ''} already at:
+            {t('storage.alreadyAt', { count: items.length, label: itemLabel })}
           </p>
           <p className="mt-2.5 px-3 py-2 bg-zinc-800/70 rounded-lg text-[11px] font-mono text-zinc-400 truncate border border-zinc-700/50">
             {currentDir}
           </p>
-          <p className="text-xs text-zinc-500 mt-3">What should happen to them?</p>
+          <p className="text-xs text-zinc-500 mt-3">{t('storage.whatHappen')}</p>
         </div>
 
         <div className="px-6 pb-5 flex flex-col gap-2">
           {status === 'error' && (
-            <p className="text-[11px] text-red-400 mb-0.5">Something went wrong. Please try again.</p>
+            <p className="text-[11px] text-red-400 mb-0.5">{t('storage.somethingWrong')}</p>
           )}
 
           <button
@@ -60,7 +62,7 @@ function MoveFolderModal({ title, currentDir, items, itemLabel, moveLabel, moveD
             disabled={status === 'busy'}
             className="w-full px-4 py-2.5 mt-0.5 rounded-xl text-xs font-medium text-zinc-300 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-zinc-600 transition-colors disabled:opacity-40"
           >
-            {status === 'busy' ? 'Please wait…' : 'Cancel'}
+            {status === 'busy' ? t('storage.pleaseWait') : t('storage.cancel')}
           </button>
         </div>
 
@@ -72,6 +74,7 @@ function MoveFolderModal({ title, currentDir, items, itemLabel, moveLabel, moveD
 // ─── StorageSection ───────────────────────────────────────────────────────────
 
 export function StorageSection(): JSX.Element {
+  const { t } = useTranslation()
   const [modelsDir,     setModelsDir]     = useState('')
   const [workspaceDir,  setWorkspaceDir]  = useState('')
   const [workflowsDir,  setWorkflowsDir]  = useState('')
@@ -255,32 +258,32 @@ export function StorageSection(): JSX.Element {
   }
 
   return (
-    <Section title="Storage" subtitle="Manage where models and outputs are saved on disk.">
+    <Section title={t('storage.title')} subtitle={t('storage.subtitle')}>
       <div className="grid grid-cols-2 gap-4">
 
-        <Card title="Directories" description="Paths used to store model weights and generated files.">
+        <Card title={t('storage.directories')} description={t('storage.directoriesDescription')}>
           <PathRow
-            label="Models"
-            description="Where downloaded AI model weights are stored."
+            label={t('storage.models')}
+            description={t('storage.modelsDescription')}
             value={modelsDir}
             onBrowse={handleBrowseModels}
           />
           <PathRow
-            label="Workspace"
-            description="Where generated 3D files are saved."
+            label={t('storage.workspace')}
+            description={t('storage.workspaceDescription')}
             value={workspaceDir}
             onBrowse={handleBrowseWorkspace}
           />
           <PathRow
-            label="Workflows"
-            description="Where workflow definitions are saved."
+            label={t('storage.workflows')}
+            description={t('storage.workflowsDescription')}
             value={workflowsDir}
             onBrowse={handleBrowseWorkflows}
           />
         </Card>
 
-        <Card title="Cache" description="Temporary files created during generation processing.">
-          <Row label="Temp files" description="Intermediate files accumulated over time.">
+        <Card title={t('storage.cache')} description={t('storage.cacheDescription')}>
+          <Row label={t('storage.tempFiles')} description={t('storage.tempFilesDescription')}>
             <button
               onClick={handleClearCache}
               disabled={cacheStatus === 'clearing'}
@@ -290,10 +293,10 @@ export function StorageSection(): JSX.Element {
                 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300'
               }`}
             >
-              {cacheStatus === 'clearing' ? 'Clearing…' :
-               cacheStatus === 'done'     ? '✓ Cleared' :
-               cacheStatus === 'error'    ? '✗ Failed'  :
-               'Clear cache'}
+              {cacheStatus === 'clearing' ? t('storage.clearing') :
+               cacheStatus === 'done'     ? t('storage.cleared') :
+               cacheStatus === 'error'    ? t('storage.clearFailed')  :
+               t('storage.clearCache')}
             </button>
           </Row>
         </Card>
@@ -302,14 +305,14 @@ export function StorageSection(): JSX.Element {
 
       {pendingModelsDir && (
         <MoveFolderModal
-          title="Change models folder"
+          title={t('storage.changeModelsFolder')}
           currentDir={modelsDir}
           items={existingModels}
-          itemLabel="model"
-          moveLabel="Move to new folder"
-          moveDesc="Transfer all models to the new location."
-          deleteLabel="Delete models"
-          deleteDesc="Remove from current folder. You'll need to re-download."
+          itemLabel={t('storage.model')}
+          moveLabel={t('storage.moveToNewFolder')}
+          moveDesc={t('storage.moveModelsDesc')}
+          deleteLabel={t('storage.deleteModels')}
+          deleteDesc={t('storage.deleteModelsDesc')}
           status={modelsActionStatus}
           onCancel={closeModelsModal}
           onMove={handleMoveModels}
@@ -319,14 +322,14 @@ export function StorageSection(): JSX.Element {
 
       {pendingWorkspaceDir && (
         <MoveFolderModal
-          title="Change workspace folder"
+          title={t('storage.changeWorkspaceFolder')}
           currentDir={workspaceDir}
           items={existingWorkspaces}
-          itemLabel="item"
-          moveLabel="Move to new folder"
-          moveDesc="Transfer all workspace files to the new location."
-          deleteLabel="Delete workspace files"
-          deleteDesc="Remove all files from the current folder."
+          itemLabel={t('storage.item')}
+          moveLabel={t('storage.moveToNewFolder')}
+          moveDesc={t('storage.moveItemsDesc')}
+          deleteLabel={t('storage.deleteItems')}
+          deleteDesc={t('storage.deleteItemsDesc')}
           status={workspaceActionStatus}
           onCancel={closeWorkspaceModal}
           onMove={handleMoveWorkspace}
@@ -336,14 +339,14 @@ export function StorageSection(): JSX.Element {
 
       {pendingWorkflowsDir && (
         <MoveFolderModal
-          title="Change workflows folder"
+          title={t('storage.changeWorkflowsFolder')}
           currentDir={workflowsDir}
           items={existingWorkflows}
-          itemLabel="workflow"
-          moveLabel="Move to new folder"
-          moveDesc="Transfer all workflow files to the new location."
-          deleteLabel="Delete workflows"
-          deleteDesc="Remove all workflow files from the current folder."
+          itemLabel={t('storage.workflow')}
+          moveLabel={t('storage.moveToNewFolder')}
+          moveDesc={t('storage.moveWorkflowsDesc')}
+          deleteLabel={t('storage.deleteWorkflows')}
+          deleteDesc={t('storage.deleteWorkflowsDesc')}
           status={workflowsActionStatus}
           onCancel={closeWorkflowsModal}
           onMove={handleMoveWorkflows}
